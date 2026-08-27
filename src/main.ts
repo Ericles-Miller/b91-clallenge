@@ -19,11 +19,14 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('CRUD Prisma')
-    .setDescription('API documentation')
+    .setDescription('API de exemplo: CRUD de usuários com NestJS + Prisma')
     .setVersion('1.0')
+    .addTag('users', 'Operações de usuários')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: { persistAuthorization: true },
+  });
 
   const port = process.env.PORT ?? 3333;
   await app.listen(port);
