@@ -1,34 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Client } from '@prisma/client';
 
 @Controller('clients')
+@ApiTags('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @Post()
-  create(@Body() createClientDto: CreateClientDto) {
-    return this.clientsService.create(createClientDto);
+  @ApiOperation({
+    summary: 'Create new client',
+    description: 'Endpoint to create a new client in the system',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Create user successfully',
+  })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  async create(@Body() createClientDto: CreateClientDto): Promise<Client> {
+    return await this.clientsService.create(createClientDto);
   }
 
   @Get()
-  findAll() {
-    return this.clientsService.findAll();
+  async findAll(): Promise<Client[]> {
+    return await this.clientsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clientsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientsService.update(+id, updateClientDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientsService.remove(+id);
+  async findOne(@Param('id') id: string): Promise<Client | null> {
+    return await this.clientsService.findOne(id);
   }
 }

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated"
 }
 
 datasource db {
@@ -25,13 +26,12 @@ enum RiskRules {
 }
 
 model Client {
-  id            String       @id @default(uuid(7))
-  fantasyName   String       @unique
-  cnpj          String
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt()
-  transaction   Transaction? @relation(fields: [transactionId], references: [id])
-  transactionId String?
+  id          String        @id @default(uuid(7))
+  fantasyName String
+  cnpj        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt()
+  transaction Transaction[]
 }
 
 model Transaction {
@@ -43,6 +43,7 @@ model Transaction {
   tax             Float
   liquidValue     Float
   status          statusTransaction
-  clientId        Client[]
+  client          Client            @relation(fields: [clientId], references: [id])
   riskRules       RiskRules
+  clientId        String
 }
