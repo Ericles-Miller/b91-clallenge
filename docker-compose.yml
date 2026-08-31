@@ -1,0 +1,57 @@
+services:
+
+  db:
+    image: postgres:15.3-alpine
+    container_name: b91_db
+    restart: on-failure
+    stop_signal: SIGINT
+    stop_grace_period: 1m
+    init: true
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: myuser
+      POSTGRES_DB: b91
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d azify"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: 'rabbitmq:3.8-management-alpine'
+    container_name: nest_msg_rabbitmq
+    restart: always
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia
+  
+  redis:
+    image: redis:7-alpine
+    container_name: azify_redis
+    restart: on-failure
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:
+  rabbitmq_data:
+  redis_data:
+
+
+networks:
+  default:

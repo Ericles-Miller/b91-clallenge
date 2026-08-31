@@ -18,20 +18,18 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('CRUD Prisma')
-    .setDescription('API de exemplo: CRUD de usuários com NestJS + Prisma')
+    .setTitle('Challenge B91')
+    .setDescription('API docs challenge B91')
     .setVersion('1.0')
     .addTag('users', 'Operações de usuários')
+    .addTag('teams', 'Operações de times')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: { persistAuthorization: true },
   });
 
-  const port = process.env.PORT ?? 3333;
-  await app.listen(port);
-  console.log(`Application running on http://localhost:${port}`);
-  console.log(`Swagger docs on http://localhost:${port}/docs`);
+  await app.listen(process.env.PORT ?? 3000, () => console.log('Server is running!!!'));
 }
 
 void bootstrap();
