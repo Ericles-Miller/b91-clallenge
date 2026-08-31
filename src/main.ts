@@ -21,9 +21,8 @@ async function bootstrap() {
     .setTitle('Challenge B91')
     .setDescription('API docs challenge B91')
     .setVersion('1.0')
-    .addTag('users', 'Operações de usuários')
-    .addTag('teams', 'Operações de times')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: { persistAuthorization: true },
