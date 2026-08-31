@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Transaction" ALTER COLUMN "installment" DROP NOT NULL,
+ALTER COLUMN "tax" DROP NOT NULL,
+ALTER COLUMN "liquidValue" DROP NOT NULL,
+ALTER COLUMN "riskRules" DROP NOT NULL;
